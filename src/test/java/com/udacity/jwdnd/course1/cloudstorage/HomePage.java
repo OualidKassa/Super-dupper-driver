@@ -1,7 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.data.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.data.Note;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -91,8 +91,16 @@ public class HomePage {
         wait = new WebDriverWait(driver, 500);
     }
 
-    public void logout() {
-        js.executeScript("arguments[0].click();", logoutButton);
+    public void deleteCredential() {
+        js.executeScript("arguments[0].click();", aDeleteCredential);
+    }
+
+    public void addNewNote() {
+        js.executeScript("arguments[0].click();", btnAddNewNote);
+    }
+
+    public void addNewCredential() {
+        js.executeScript("arguments[0].click();", btnAddNewCredential);
     }
 
     public void editNote() {
@@ -105,22 +113,6 @@ public class HomePage {
 
     public void deleteNote() {
         js.executeScript("arguments[0].click();", ancDeleteNote);
-    }
-
-    public void deleteCredential() {
-        js.executeScript("arguments[0].click();", aDeleteCredential);
-    }
-
-    public void uploadFile() {
-        js.executeScript("arguments[0].click();", fileUpload);
-    }
-
-    public void addNewNote() {
-        js.executeScript("arguments[0].click();", btnAddNewNote);
-    }
-
-    public void addNewCredential() {
-        js.executeScript("arguments[0].click();", btnAddNewCredential);
     }
 
     public void setNoteTitle(String noteTitle) {
@@ -172,13 +164,6 @@ public class HomePage {
     public boolean noNotes(WebDriver driver) {
         return !isElementPresent(By.id("tableNoteTitle"), driver) && !isElementPresent(By.id("tableNoteDescription"), driver);
     }
-
-    public boolean noCredentials(WebDriver driver) {
-        return !isElementPresent(By.id("tblCredentialUrl"), driver) &&
-                !isElementPresent(By.id("tblCredentialUsername"), driver) &&
-                !isElementPresent(By.id("tblCredentialPassword"), driver);
-    }
-
     public boolean isElementPresent(By locatorKey, WebDriver driver) {
         try {
             driver.findElement(locatorKey);
@@ -187,6 +172,16 @@ public class HomePage {
         } catch (org.openqa.selenium.NoSuchElementException e) {
             return false;
         }
+    }
+
+    public void logout() {
+        js.executeScript("arguments[0].click();", logoutButton);
+    }
+
+    public boolean noCredentials(WebDriver driver) {
+        return !isElementPresent(By.id("tblCredentialUrl"), driver) &&
+                !isElementPresent(By.id("tblCredentialUsername"), driver) &&
+                !isElementPresent(By.id("tblCredentialPassword"), driver);
     }
 
     public Note getFirstNote() {

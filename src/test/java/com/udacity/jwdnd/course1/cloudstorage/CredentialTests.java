@@ -1,39 +1,25 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
+import com.udacity.jwdnd.course1.cloudstorage.data.Credential;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * Tests for Credential Creation, Viewing, Editing, and Deletion.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CredentialTests extends CloudStorageApplicationTests {
 
-	public static final String BEATLES_URL = "https://www.thebeatles.com/";
-	public static final String MCCARTNEY_USERNAME = "mccartney";
-	public static final String MCCARTNEY_PASSWORD = "mary";
-	public static final String RINGO_URL = "http://www.ringostarr.com/";
-	public static final String RINGO_USERNAME = "starr";
-	public static final String RINGO_PASSWORD = "barbara";
-
-	/**
-	 * Test that creates a set of credentials, verifies that they are displayed, and verifies that the displayed
-	 * password is encrypted.
-	 */
 	@Test
-	public void testCredentialCreation() {
-		HomePage homePage = signUpAndLogin();
-		createAndVerifyCredential(BEATLES_URL, MCCARTNEY_USERNAME, MCCARTNEY_PASSWORD, homePage);
+	public void shouldCredentialGetCreate() {
+		HomePage homePage = shouldSignUpAndLogPage();
+		shouldCredentialTest(MY_GITHUB_URL, USERNAME, PASSWORD, homePage);
 		homePage.deleteCredential();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		SuccesfullPage succesfullPage = new SuccesfullPage(driver);
+		succesfullPage.clickOk();
 		homePage.logout();
 	}
 
-	private void createAndVerifyCredential(String url, String username, String password, HomePage homePage) {
-		createCredential(url, username, password, homePage);
+	private void shouldCredentialTest(String url, String username, String password, HomePage homePage) {
+		shouldCredentialGetCreate(url, username, password, homePage);
 		homePage.navToCredentialsTab();
 		Credential credential = homePage.getFirstCredential();
 		Assertions.assertEquals(url, credential.getUrl());
@@ -41,40 +27,37 @@ class CredentialTests extends CloudStorageApplicationTests {
 		Assertions.assertNotEquals(password, credential.getPassword());
 	}
 
-	private void createCredential(String url, String username, String password, HomePage homePage) {
+	private void shouldCredentialGetCreate(String url, String username, String password, HomePage homePage) {
 		homePage.navToCredentialsTab();
 		homePage.addNewCredential();
-		setCredentialFields(url, username, password, homePage);
+		SendCredentialToFields(url, username, password, homePage);
 		homePage.saveCredentialChanges();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		SuccesfullPage succesfullPage = new SuccesfullPage(driver);
+		succesfullPage.clickOk();
 		homePage.navToCredentialsTab();
 	}
 
-	private void setCredentialFields(String url, String username, String password, HomePage homePage) {
+	private void SendCredentialToFields(String url, String username, String password, HomePage homePage) {
 		homePage.setCredentialUrl(url);
 		homePage.setCredentialUsername(username);
 		homePage.setCredentialPassword(password);
 	}
 
-	/**
-	 * Test that views an existing set of credentials, verifies that the viewable password is unencrypted, edits the
-	 * credentials, and verifies that the changes are displayed.
-	 */
+
 	@Test
-	public void testCredentialModification() {
-		HomePage homePage = signUpAndLogin();
-		createAndVerifyCredential(BEATLES_URL, MCCARTNEY_USERNAME, MCCARTNEY_PASSWORD, homePage);
+	public void shouldTestCredentialWithModification() {
+		HomePage homePage = shouldSignUpAndLogPage();
+		shouldCredentialTest(MY_GITHUB_URL, USERNAME, PASSWORD, homePage);
 		Credential originalCredential = homePage.getFirstCredential();
 		String firstEncryptedPassword = originalCredential.getPassword();
 		homePage.editCredential();
-		String newUrl = RINGO_URL;
-		String newCredentialUsername = RINGO_USERNAME;
-		String newPassword = RINGO_PASSWORD;
-		setCredentialFields(newUrl, newCredentialUsername, newPassword, homePage);
+		String newUrl = SOME_URL;
+		String newCredentialUsername = INFO;
+		String newPassword = STUDY;
+		SendCredentialToFields(newUrl, newCredentialUsername, newPassword, homePage);
 		homePage.saveCredentialChanges();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		SuccesfullPage succesfullPage = new SuccesfullPage(driver);
+		succesfullPage.clickOk();
 		homePage.navToCredentialsTab();
 		Credential modifiedCredential = homePage.getFirstCredential();
 		Assertions.assertEquals(newUrl, modifiedCredential.getUrl());
@@ -83,31 +66,35 @@ class CredentialTests extends CloudStorageApplicationTests {
 		Assertions.assertNotEquals(newPassword, modifiedCredentialPassword);
 		Assertions.assertNotEquals(firstEncryptedPassword, modifiedCredentialPassword);
 		homePage.deleteCredential();
-		resultPage.clickOk();
+		succesfullPage.clickOk();
 		homePage.logout();
 	}
 
-	/**
-	 * Test that deletes an existing set of credentials and verifies that the credentials are no longer displayed.
-	 */
 	@Test
-	public void testDeletion() {
-		HomePage homePage = signUpAndLogin();
-		createCredential(BEATLES_URL, MCCARTNEY_USERNAME, MCCARTNEY_PASSWORD, homePage);
-		createCredential(RINGO_URL, RINGO_USERNAME, RINGO_PASSWORD, homePage);
-		createCredential("http://www.johnlennon.com/", "lennon", "julia", homePage);
+	public void shouldTestNavigation() {
+		HomePage homePage = shouldSignUpAndLogPage();
+		shouldCredentialGetCreate(MY_GITHUB_URL, USERNAME, PASSWORD, homePage);
+		shouldCredentialGetCreate(SOME_URL, INFO, STUDY, homePage);
+		shouldCredentialGetCreate("http://www.dcomics.com/", "batman", "bruce", homePage);
 		Assertions.assertFalse(homePage.noCredentials(driver));
 		homePage.deleteCredential();
-		ResultPage resultPage = new ResultPage(driver);
-		resultPage.clickOk();
+		SuccesfullPage succesfullPage = new SuccesfullPage(driver);
+		succesfullPage.clickOk();
 		homePage.navToCredentialsTab();
 		homePage.deleteCredential();
-		resultPage.clickOk();
+		succesfullPage.clickOk();
 		homePage.navToCredentialsTab();
 		homePage.deleteCredential();
-		resultPage.clickOk();
+		succesfullPage.clickOk();
 		homePage.navToCredentialsTab();
 		Assertions.assertTrue(homePage.noCredentials(driver));
 		homePage.logout();
 	}
+
+	public static final String MY_GITHUB_URL = "https://github.com/OualidKassa";
+	public static final String USERNAME = "not my real username";
+	public static final String PASSWORD = "And certainly not my password";
+	public static final String SOME_URL = "http://www.google.com/";
+	public static final String INFO = "project from udacity";
+	public static final String STUDY = "Java web spring framework";
 }

@@ -7,19 +7,21 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class ResultPage {
+public class SuccesfullPage {
 
     private final JavascriptExecutor js;
 
-    public ResultPage(WebDriver driver) {
+    @FindBy(id = "succesfull")
+    private WebElement succesfull;
+
+    public SuccesfullPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }
 
-    @FindBy(id = "aResultSuccess")
-    private WebElement aResultSuccess;
+
 
     public void clickOk() {
-        js.executeScript("arguments[0].click();", aResultSuccess);
+        js.executeScript("arguments[0].click();", succesfull);
     }
 }

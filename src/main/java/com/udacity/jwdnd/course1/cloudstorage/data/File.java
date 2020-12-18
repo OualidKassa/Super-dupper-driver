@@ -1,6 +1,7 @@
-package com.udacity.jwdnd.course1.cloudstorage.model;
+package com.udacity.jwdnd.course1.cloudstorage.data;
 
 public class File {
+
     private int fileId;
     private String fileName;
     private String contentType;
@@ -15,6 +16,9 @@ public class File {
         this.fileSize = fileSize;
         this.userId = userId;
         this.fileData = fileData;
+    }
+
+    public File() {
     }
 
     public int getFileId() {

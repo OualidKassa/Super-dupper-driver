@@ -6,7 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class SignupPage {
+public class SignPage {
     @FindBy(id = "inputFirstName")
     private WebElement inputFirstName;
 
@@ -24,7 +24,7 @@ public class SignupPage {
 
     private final JavascriptExecutor js;
 
-    public SignupPage(WebDriver driver) {
+    public SignPage(WebDriver driver) {
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }

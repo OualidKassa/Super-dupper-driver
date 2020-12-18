@@ -1,15 +1,9 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
-import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
-import com.udacity.jwdnd.course1.cloudstorage.mapper.UserMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
+import com.udacity.jwdnd.course1.cloudstorage.mapping.NoteMapper;
+import com.udacity.jwdnd.course1.cloudstorage.mapping.UserMapper;
+import com.udacity.jwdnd.course1.cloudstorage.data.Note;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Service
 public class NoteService {
@@ -21,25 +15,25 @@ public class NoteService {
         this.noteMapper = noteMapper;
     }
 
-    public void addNote(String title, String description, String userName) {
+    public void addNoteService(String title, String description, String userName) {
         Integer userId = userMapper.getUser(userName).getUserId();
         Note note = new Note(0, title, description, userId);
-        noteMapper.insert(note);
+        noteMapper.insertNote(note);
     }
 
-    public Note[] getNoteListings(Integer userId) {
-        return noteMapper.getNotesForUser(userId);
+    public Note[] getNoteListService(Integer userId) {
+        return noteMapper.getNotesListUsers(userId);
     }
 
-    public Note getNote(Integer noteId) {
+    public Note getNoteService(Integer noteId) {
         return noteMapper.getNote(noteId);
     }
 
-    public void deleteNote(Integer noteId) {
+    public void deleteNoteService(Integer noteId) {
         noteMapper.deleteNote(noteId);
     }
 
-    public void updateNote(Integer noteId, String title, String description) {
+    public void updateNoteService(Integer noteId, String title, String description) {
         noteMapper.updateNote(noteId, title, description);
     }
 }

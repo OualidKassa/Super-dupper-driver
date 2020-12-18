@@ -32,23 +32,28 @@ class CloudStorageApplicationTests {
 	}
 
 	@Test
-	public void getLoginPage() {
+	public void shouldOpenLoginPage() {
 		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
-	protected HomePage signUpAndLogin() {
+	protected HomePage shouldSignUpAndLogPage() {
+
 		driver.get("http://localhost:" + this.port + "/signup");
-		SignupPage signupPage = new SignupPage(driver);
-		signupPage.setFirstName("John");
-		signupPage.setLastName("Lennon");
-		signupPage.setUserName("lennon");
-		signupPage.setPassword("julia");
-		signupPage.signUp();
+		SignPage signPage = new SignPage(driver);
+
+		signPage.setUserName("wk");
+		signPage.setPassword("wk");
+
+		signPage.setFirstName("walid");
+		signPage.setLastName("kassa");
+
+		signPage.signUp();
+
 		driver.get("http://localhost:" + this.port + "/login");
 		LoginPage loginPage = new LoginPage(driver);
-		loginPage.setUserName("lennon");
-		loginPage.setPassword("julia");
+		loginPage.setUserName("wk");
+		loginPage.setPassword("wk");
 		loginPage.login();
 
 		return new HomePage(driver);

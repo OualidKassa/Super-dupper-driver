@@ -9,9 +9,6 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import java.util.concurrent.TimeUnit;
 
-/**
- * Tests for User Signup, Login, and Unauthorized Access Restrictions.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserTests {
 
@@ -32,16 +29,11 @@ class UserTests {
 
 	@AfterEach
 	public void afterEach() {
-		if (this.driver != null) {
-			driver.quit();
-		}
+		if (this.driver != null) driver.quit();
 	}
 
-	/**
-	 * Write a test that verifies that an unauthorized user can only access the login and signup pages.
-	 */
 	@Test
-	public void testPageAccess() {
+	public void shouldAccessToPageHomeAndSignup() {
 		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
 
@@ -52,28 +44,28 @@ class UserTests {
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
-	/**
-	 * Write a test that signs up a new user, logs in, verifies that the home page is accessible, logs out, and verifies
-	 * that the home page is no longer accessible.
-	 */
 	@Test
-	public void testSignUpLoginLogout() {
+	public void shouldSignUpAndLoginWork() {
 		driver.get("http://localhost:" + this.port + "/signup");
 		Assertions.assertEquals("Sign Up", driver.getTitle());
 
-		SignupPage signupPage = new SignupPage(driver);
-		signupPage.setFirstName("John");
-		signupPage.setLastName("Lennon");
-		signupPage.setUserName("lennon");
-		signupPage.setPassword("julia");
-		signupPage.signUp();
+		SignPage signPage = new SignPage(driver);
+
+		signPage.setUserName("wk");
+		signPage.setPassword("wk");
+
+		signPage.setFirstName("walid");
+		signPage.setLastName("kassa");
+
+		signPage.signUp();
 
 		driver.get("http://localhost:" + this.port + "/login");
 		Assertions.assertEquals("Login", driver.getTitle());
 
 		LoginPage loginPage = new LoginPage(driver);
-		loginPage.setUserName("lennon");
-		loginPage.setPassword("julia");
+
+		loginPage.setUserName("wk");
+		loginPage.setPassword("wk");
 		loginPage.login();
 
 		HomePage homePage = new HomePage(driver);

@@ -22,16 +22,14 @@ public class LoginPage {
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }
-
+    public void login() {
+        js.executeScript("arguments[0].click();", submitButton);
+    }
     public void setUserName(String userName) {
         js.executeScript("arguments[0].value='"+ userName +"';", inputUserName);
     }
 
     public void setPassword(String password) {
         js.executeScript("arguments[0].value='"+ password +"';", inputPassword);
-    }
-
-    public void login() {
-        js.executeScript("arguments[0].click();", submitButton);
     }
 }

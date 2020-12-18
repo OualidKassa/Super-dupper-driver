@@ -1,6 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.*;
+import com.udacity.jwdnd.course1.cloudstorage.data.*;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -32,8 +32,8 @@ public class CredentialController {
             @ModelAttribute("newCredential") CredentialForm newCredential,
             @ModelAttribute("newNote") NoteForm newNote, Model model) {
         String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", this.credentialService.getCredentialListings(user.getUserId()));
+        User user = userService.getUserService(userName);
+        model.addAttribute("credentials", this.credentialService.getCredentialListingsService(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
 
         return "home";
@@ -50,19 +50,19 @@ public class CredentialController {
         String password = newCredential.getPassword();
 
         SecureRandom random = new SecureRandom();
-        byte[] key = new byte[16];
-        random.nextBytes(key);
-        String encodedKey = Base64.getEncoder().encodeToString(key);
+        byte[] keyCredential = new byte[16];
+        random.nextBytes(keyCredential);
+        String encodedKey = Base64.getEncoder().encodeToString(keyCredential);
         String encryptedPassword = encryptionService.encryptValue(password, encodedKey);
 
         if (credentialIdStr.isEmpty()) {
-            credentialService.addCredential(newUrl, userName, newCredential.getUserName(), encodedKey, encryptedPassword);
+            credentialService.addCredentialService(newUrl, userName, newCredential.getUserName(), encodedKey, encryptedPassword);
         } else {
             Credential existingCredential = getCredential(Integer.parseInt(credentialIdStr));
-            credentialService.updateCredential(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
+            credentialService.updateCredentialService(existingCredential.getCredentialid(), newCredential.getUserName(), newUrl, encodedKey, encryptedPassword);
         }
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getCredentialListings(user.getUserId()));
+        User user = userService.getUserService(userName);
+        model.addAttribute("credentials", credentialService.getCredentialListingsService(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("result", "success");
 
@@ -71,7 +71,7 @@ public class CredentialController {
 
     @GetMapping(value = "/get-credential/{credentialId}")
     public Credential getCredential(@PathVariable Integer credentialId) {
-        return credentialService.getCredential(credentialId);
+        return credentialService.getCredentialService(credentialId);
     }
 
     @GetMapping(value = "/delete-credential/{credentialId}")
@@ -80,10 +80,10 @@ public class CredentialController {
             @ModelAttribute("newCredential") CredentialForm newCredential,
             @ModelAttribute("newFile") FileForm newFile,
             @ModelAttribute("newNote") NoteForm newNote, Model model) {
-        credentialService.deleteCredential(credentialId);
+        credentialService.deleteCredentialService(credentialId);
         String userName = authentication.getName();
-        User user = userService.getUser(userName);
-        model.addAttribute("credentials", credentialService.getCredentialListings(user.getUserId()));
+        User user = userService.getUserService(userName);
+        model.addAttribute("credentials", credentialService.getCredentialListingsService(user.getUserId()));
         model.addAttribute("encryptionService", encryptionService);
         model.addAttribute("result", "success");
 
