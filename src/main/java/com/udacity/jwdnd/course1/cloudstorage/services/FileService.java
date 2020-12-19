@@ -3,6 +3,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapping.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapping.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.data.File;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,13 +23,27 @@ public class FileService {
     }
 
     public String[] getFileListService(Integer userId) {
-        return fileMapper.getListFile(userId);
+        try {
+            return fileMapper.getListFile(userId);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
     public File getFileService(String fileName) {
-        return fileMapper.getFile(fileName);
+        try {
+            return fileMapper.getFile(fileName);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
     public void deleteFileService(String fileName) {
-        fileMapper.deleteFile(fileName);
+        try {
+            fileMapper.deleteFile(fileName);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
     }
 
     public void addFileService(String userName, MultipartFile multipartFile) throws IOException {
@@ -43,13 +58,17 @@ public class FileService {
         }
         byteArrayOutputStream.flush();
         byte[] fileData = byteArrayOutputStream.toByteArray();
-
         String fileSize = String.valueOf(multipartFile.getSize());
         Integer userId = userMapper.getUser(userName).getUserId();
         String contentType = multipartFile.getContentType();
         String fileName = multipartFile.getOriginalFilename();
 
         File file = new File(0, fileName, contentType, fileSize, userId, fileData);
-        fileMapper.insertFile(file);
+        try {
+            fileMapper.insertFile(file);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
 }

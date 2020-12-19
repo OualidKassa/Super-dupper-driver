@@ -2,6 +2,7 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 
 import com.udacity.jwdnd.course1.cloudstorage.mapping.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.data.User;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -24,13 +25,26 @@ public class UserService {
         random.nextBytes(salt);
         String encodedSalt = Base64.getEncoder().encodeToString(salt);
         String hashedPassword = hashService.getHashedValue(user.getPassword(), encodedSalt);
-        return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
+        try {
+            return userMapper.insert(new User(null, user.getUsername(), encodedSalt, hashedPassword, user.getFirstName(), user.getLastName()));
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
 
     public User getUserService(String username) {
-        return userMapper.getUser(username);
+        try {
+            return userMapper.getUser(username);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
     }
     public boolean isUsernameFreeService(String username) {
-        return userMapper.getUser(username) == null;
+        try {
+            return userMapper.getUser(username) == null;
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
     }
 }

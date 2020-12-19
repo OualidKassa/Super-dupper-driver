@@ -3,7 +3,9 @@ package com.udacity.jwdnd.course1.cloudstorage.services;
 import com.udacity.jwdnd.course1.cloudstorage.mapping.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapping.UserMapper;
 import com.udacity.jwdnd.course1.cloudstorage.data.Credential;
+import org.apache.ibatis.exceptions.PersistenceException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Service
 public class CredentialService {
@@ -18,24 +20,47 @@ public class CredentialService {
     }
 
     public void addCredentialService(String url, String userName, String credentialUserName, String keyCredential, String password) {
-        Integer userId = userMapper.getUser(userName).getUserId();
-        Credential credential = new Credential(0, url, credentialUserName, keyCredential, password, userId);
-        credentialMapper.insert(credential);
+        try{
+            Integer userId = userMapper.getUser(userName).getUserId();
+            Credential credential = new Credential(0, url, credentialUserName, keyCredential, password, userId);
+            credentialMapper.insert(credential);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
 
     public void updateCredentialService(Integer credentialId, String newUserName, String url, String keyCredential, String password) {
-        credentialMapper.updateCredential(credentialId, newUserName, url, keyCredential, password);
+        try{
+            credentialMapper.updateCredential(credentialId, newUserName, url, keyCredential, password);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
 
     public Credential getCredentialService(Integer noteId) {
-        return credentialMapper.getCredential(noteId);
+        try{
+            return credentialMapper.getCredential(noteId);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
     }
 
     public Credential[] getCredentialListingsService(Integer userId) {
-        return credentialMapper.getListCredential(userId);
+        try {
+            return credentialMapper.getListCredential(userId);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
     }
     public void deleteCredentialService(Integer noteId) {
-        credentialMapper.deleteCredential(noteId);
+        try {
+            credentialMapper.deleteCredential(noteId);
+        }catch (PersistenceException e) {
+            throw new PersistenceException(e);
+        }
+
     }
 
 
